@@ -14,11 +14,8 @@ server = app.server
 df = pd.read_csv('datos_Con_date_Seasons.csv')
 
 variable_respuesta = "Rented Bike Count"
-available_indicators = [col for col in df.columns if col not in [variable_respuesta, 'Date', "Seasons","Winter","Summer","Spring","Autumn","Dew point temperature(C)",
-                                                                 "Solar Radiation (MJ/m2)"]]
-
-df["Holiday"]=df["Holiday"].map({0:"No Holiday",1:"Holiday"})
-df["Functioning Day"]=df["Functioning Day"].map({0:"Yes",1:"No"})
+available_indicators = [col for col in df.columns if col not in [variable_respuesta, 'Date', "Seasons","Winter","Summer","Spring","Autumn","Dew point temperature(C)","Holiday",
+                                                                 "Solar Radiation (MJ/m2)","Functioning Day"]]
 
 # Filtrar las columnas numéricas y categóricas
 numeric_columns = df.select_dtypes(include=['float64', 'int64']).columns.tolist()
@@ -115,8 +112,6 @@ app.layout = html.Div([
 numeric_graphs = [
     {'label': 'Scatter Plot', 'value': 'scatter'},
     {'label': 'Heatmap', 'value': 'heatmap'},
-    {'label': 'Bar Plot', 'value': 'bar'},
-    {'label': 'Box Plot', 'value': 'box'},
     {'label': 'Histogram', 'value': 'histogram'}  # Agregar histograma
 ]
 
@@ -181,12 +176,6 @@ def update_graph(xaxis_column_name, yaxis_column_name,
                          trendline='ols')  # Agregar la línea de tendencia (regresión lineal)
     elif chart_type == 'heatmap':
         fig = px.density_heatmap(dff, x=xaxis_column_name, y=yaxis_column_name)
-    elif chart_type == 'bar':
-        fig = px.bar(dff, x=xaxis_column_name, y=yaxis_column_name)
-    elif chart_type == 'pie':
-        fig = px.pie(dff, names=xaxis_column_name, values=yaxis_column_name)
-    elif chart_type == 'box':
-        fig = px.box(dff, x=xaxis_column_name, y=yaxis_column_name)
     elif chart_type == 'histogram':  # Agregar histograma
         fig = px.histogram(dff, x=xaxis_column_name, nbins=20, labels={xaxis_column_name: xaxis_column_name})
 
